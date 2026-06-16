@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snake Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── Header ── -->
+  <header>
+    <h1>Snake Game</h1>
+    <p>Classic snake — with a leaderboard, WebSocket &amp; REST API backend</p>
+  </header>
+
+  <!-- ── Main 3-column Grid ── -->
+  <div class="main-grid">
+
+    <!-- ── Left Panel: Stats + Controls ── -->
+    <aside class="panel stats-panel">
+      <h2>Stats</h2>
+
+      <div class="stat-block">
+        <div class="stat-label">Score</div>
+        <div class="stat-value" id="score">0</div>
+      </div>
+
+      <div class="stat-block">
+        <div class="stat-label">High Score</div>
+        <div class="stat-value amber" id="highScore">0</div>
+      </div>
+
+      <div class="stat-block">
+        <div class="stat-label">Level</div>
+        <div class="stat-value blue" id="level">1</div>
+      </div>
+
+      <div class="stat-block">
+        <div class="stat-label">Snake Length</div>
+        <div class="stat-value red" id="snakeLength">3</div>
+      </div>
+
+      <hr class="divider" />
+
+      <label class="select-label">Difficulty</label>
+      <select id="difficulty">
+        <option value="easy">Easy (slow)</option>
+        <option value="medium" selected>Medium</option>
+        <option value="hard">Hard</option>
+        <option value="insane">Insane 🔥</option>
+      </select>
+
+      <button class="btn btn-green" id="startBtn">▶ Start Game</button>
+      <button class="btn btn-ghost" id="pauseBtn" disabled>⏸ Pause</button>
+      <button class="btn btn-red"   id="restartBtn">↺ Restart</button>
+
+      <!-- API status -->
+      <div class="api-status">
+        <span class="dot" id="apiDot"></span>
+        <span id="apiLabel">Connecting…</span>
+      </div>
+      <div class="api-status" style="margin-top:4px">
+        <span class="dot" style="background:#58a6ff;box-shadow:0 0 6px #58a6ff"></span>
+        <span id="wsLabel">WS: connecting…</span>
+      </div>
+    </aside>
+
+    <!-- ── Center: Canvas + Progress ── -->
+    <section class="game-center">
+
+      <!-- Canvas -->
+      <div class="canvas-wrapper" id="canvasWrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Overlay (start / paused / game-over) -->
+        <div class="canvas-overlay" id="overlay">
+          <div class="overlay-emoji" id="overlayEmoji">🐍</div>
+          <div class="overlay-title" id="overlayTitle">Snake Game</div>
+          <div class="overlay-sub"   id="overlaySub">Use arrow keys or WASD to move</div>
+
+          <!-- Score shown on game-over -->
+          <div class="overlay-score" id="overlayScore" style="display:none">0</div>
+
+          <!-- Save score row (shown on game-over) -->
+          <div class="name-input-row" id="nameInputRow" style="display:none">
+            <input
+              type="text"
+              id="playerName"
+              placeholder="Your name…"
+              maxlength="20"
+              autocomplete="off"
+            />
+            <button class="btn btn-green" id="saveScoreBtn">Save</button>
+          </div>
+
+          <button class="btn btn-green" id="restartBtn2"
+            style="max-width:200px;margin-top:4px"
+            onclick="document.getElementById('startBtn').click()">
+            ▶ Play Again
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-row">
+        <div class="progress-label">
+          <span id="progressLabel">Food: 0/5 to next level</span>
+          <span id="levelLabel"></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Mobile D-pad -->
+      <div class="mobile-controls">
+        <button class="mb-up"    id="mbUp">↑</button>
+        <button class="mb-left"  id="mbLeft">←</button>
+        <button class="mb-center">●</button>
+        <button class="mb-right" id="mbRight">→</button>
+        <button class="mb-down"  id="mbDown">↓</button>
+      </div>
+    </section>
+
+    <!-- ── Right Panel: Leaderboard + Controls ── -->
+    <aside>
+
+      <!-- Leaderboard -->
+      <div class="panel" style="margin-bottom:16px">
+        <h2>🏆 Leaderboard</h2>
+        <ul class="leaderboard-list" id="leaderboardList">
+          <li class="lb-empty">Loading scores…</li>
+        </ul>
+      </div>
+
+      <!-- Keyboard guide -->
+      <div class="panel controls-panel">
+        <h2>Controls</h2>
+        <div class="controls-grid">
+          <div class="control-item">
+            <span class="key">↑ W</span>
+            <span class="key-desc">Move Up</span>
+          </div>
+          <div class="control-item">
+            <span class="key">↓ S</span>
+            <span class="key-desc">Move Down</span>
+          </div>
+          <div class="control-item">
+            <span class="key">← A</span>
+            <span class="key-desc">Move Left</span>
+          </div>
+          <div class="control-item">
+            <span class="key">→ D</span>
+            <span class="key-desc">Move Right</span>
+          </div>
+          <div class="control-item">
+            <span class="key">P / Esc</span>
+            <span class="key-desc">Pause</span>
+          </div>
+          <div class="control-item">
+            <span class="key">Space</span>
+            <span class="key-desc">Start / Restart</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div><!-- /main-grid -->
+
+</div><!-- /app -->
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+<script src="game.js"></script>
+</body>
+</html>

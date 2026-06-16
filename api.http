@@ -1,0 +1,45 @@
+### Snake Game API Tests
+### Use with VS Code "REST Client" extension
+
+# ── Health Check ──────────────────────────────────────────
+GET http://localhost:3001/api/health
+Content-Type: application/json
+
+###
+
+# ── Get Leaderboard ───────────────────────────────────────
+GET http://localhost:3001/api/leaderboard
+Content-Type: application/json
+
+###
+
+# ── Submit a Score ────────────────────────────────────────
+POST http://localhost:3001/api/leaderboard
+Content-Type: application/json
+
+{
+  "name": "TestPlayer",
+  "score": 250
+}
+
+###
+
+# ── Submit another Score ──────────────────────────────────
+POST http://localhost:3001/api/leaderboard
+Content-Type: application/json
+
+{
+  "name": "ProGamer",
+  "score": 500
+}
+
+###
+
+# ── Test validation (should return 400) ───────────────────
+POST http://localhost:3001/api/leaderboard
+Content-Type: application/json
+
+{
+  "name": "",
+  "score": -10
+}
